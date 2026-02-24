@@ -1,7 +1,21 @@
 services:
+  icecast:
+    image: infiniteproject/icecast
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ICECAST_SOURCE_PASSWORD=${ICECAST_SOURCE_PASSWORD}
+      - ICECAST_ADMIN_PASSWORD=${ICECAST_ADMIN_PASSWORD}
+      - ICECAST_PASSWORD=${ICECAST_PASSWORD}
+      - ICECAST_RELAY_PASSWORD=${ICECAST_RELAY_PASSWORD}
+      - ICECAST_HOSTNAME=icecast
+
   snap-to-icecast-bridge:
     build: .
     container_name: snap_icecast_bridge
     restart: unless-stopped
+    depends_on:
+      - icecast
     env_file:
       - .env

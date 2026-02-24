@@ -12,7 +12,6 @@ A "Silent Bridge" that pipes raw audio data from a Snapcast client directly into
 
 - Docker and Docker Compose installed.
 - Access to a running [Snapserver](https://github.com/badaix/snapcast).
-- Access to a running [Icecast](https://icecast.org/) server.
 
 ## Setup
 
@@ -28,16 +27,25 @@ A "Silent Bridge" that pipes raw audio data from a Snapcast client directly into
    ```bash
    # .env
    SNAPSERVER_IP=192.168.1.50
-   ICECAST_URL=icecast://source:your_password@192.168.1.100:8000/stream
+   
+   # Icecast Configuration
+   ICECAST_SOURCE_PASSWORD=hackme
+   ICECAST_ADMIN_PASSWORD=hackme
+   ICECAST_PASSWORD=hackme
+   ICECAST_RELAY_PASSWORD=hackme
+   
+   # Internal URL for the bridge to connect to Icecast
+   ICECAST_URL=icecast://source:hackme@icecast:8000/stream
    ```
 
    - `SNAPSERVER_IP`: The IP address of your Snapserver.
-   - `ICECAST_URL`: The full URL to stream to your Icecast server, including authentication credentials.
+   - `ICECAST_URL`: The full URL to stream to the internal Icecast server.
+   - `ICECAST_*_PASSWORD`: Passwords for the Icecast server.
 
 ## Usage
 
 1. **Build and Run**:
-   Use Docker Compose to build the image and start the container in the background.
+   Use Docker Compose to build the image and start the containers (bridge + icecast) in the background.
 
    ```bash
    docker compose up -d --build

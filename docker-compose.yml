@@ -1,0 +1,7 @@
+services:
+  snap-to-icecast-bridge:
+    build: .
+    container_name: snap_icecast_bridge
+    restart: unless-stopped
+    env_file:
+      - .env

@@ -1,9 +1,9 @@
 services:
   icecast:
-    image: infiniteproject/icecast
+    image: ghcr.io/libretime/icecast:2.4.4
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "8010:8000"
     environment:
       - ICECAST_SOURCE_PASSWORD=${ICECAST_SOURCE_PASSWORD}
       - ICECAST_ADMIN_PASSWORD=${ICECAST_ADMIN_PASSWORD}

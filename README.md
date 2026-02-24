@@ -51,7 +51,13 @@ A "Silent Bridge" that pipes raw audio data from a Snapcast client directly into
    docker compose up -d --build
    ```
 
-2. **View Logs**:
+2. **Access Stream**:
+   The Icecast server will be available on port `8010` (to avoid conflicts with other services).
+   
+   - **Stream URL**: `http://<your-pi-ip>:8010/stream`
+   - **Admin Panel**: `http://<your-pi-ip>:8010/admin/`
+
+3. **View Logs**:
    Check the logs to ensure the connection is established and audio is streaming.
 
    ```bash

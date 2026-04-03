@@ -36,11 +36,15 @@ A "Silent Bridge" that pipes raw audio data from a Snapcast client directly into
    
    # Internal URL for the bridge to connect to Icecast
    ICECAST_URL=icecast://source:hackme@icecast:8000/stream
+
+   # Cloudflare Tunnel Configuration (Optional)
+   TUNNEL_TOKEN=your_cloudflare_tunnel_token
    ```
 
    - `SNAPSERVER_IP`: The IP address of your Snapserver.
    - `ICECAST_URL`: The full URL to stream to the internal Icecast server.
    - `ICECAST_*_PASSWORD`: Passwords for the Icecast server.
+   - `TUNNEL_TOKEN`: Your Cloudflare Zero Trust tunnel token (if exposing via Cloudflare).
 
 ## Usage
 
@@ -71,6 +75,12 @@ A "Silent Bridge" that pipes raw audio data from a Snapcast client directly into
    docker compose down
    ```
 
+## Expose via Cloudflare Tunnel (Optional)
+
+You can securely expose your Icecast stream to the internet using Cloudflare Zero Trust without opening any firewall ports. 
+
+For a comprehensive, step-by-step tutorial on setting up your Cloudflare account, creating a tunnel, and extracting your `TUNNEL_TOKEN`, please see the [Cloudflare Setup Guide](CLOUDFLARE_GUIDE.md).
+
 ## wrapper script
 
 The audio pipeline logic is contained in `start.sh`:
@@ -79,6 +89,7 @@ The audio pipeline logic is contained in `start.sh`:
 #!/bin/sh
 snapclient -h $SNAPSERVER_IP --logsink stderr --player file | \
 ffmpeg -f s16le -ar 48000 -ac 2 -i pipe:0 \
+-af "alimiter=limit=0.99" \
 -codec:a libmp3lame -b:a 128k -content_type audio/mpeg \
 -f mp3 $ICECAST_URL
 ```

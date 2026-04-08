@@ -17,7 +17,7 @@ A "Silent Bridge" that pipes raw audio data from a Snapcast client directly into
 
 1. **Clone the repository**:
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/byrdsandbytes/beatnik-icecast-bridge
    cd beatnik-icecast-bridge
    ```
 

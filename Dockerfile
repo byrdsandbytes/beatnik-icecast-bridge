@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 # Install snapclient and ffmpeg
 RUN apt-get update && \

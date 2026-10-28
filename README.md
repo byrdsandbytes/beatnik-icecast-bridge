@@ -87,9 +87,10 @@ The audio pipeline logic is contained in `start.sh`:
 
 ```bash
 #!/bin/sh
-snapclient -h $SNAPSERVER_IP --logsink stderr --player file | \
-ffmpeg -f s16le -ar 48000 -ac 2 -i pipe:0 \
--af "alimiter=limit=0.99" \
--codec:a libmp3lame -b:a 128k -content_type audio/mpeg \
--f mp3 $ICECAST_URL
+#!/bin/sh
+snapclient -h $SNAPSERVER_IP --logsink stderr --player file --mixer none | \
+ffmpeg -re -f s16be -ar 44100 -ac 2 -i pipe:0 \
+-af "aresample=async=1" \
+-codec:a libvorbis -q:a 5 -content_type application/ogg \
+-f ogg $ICECAST_URL
 ```

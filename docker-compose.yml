@@ -14,6 +14,7 @@ services:
   snap-to-icecast-bridge:
     build: .
     container_name: snap_icecast_bridge
+    hostname: beatnik-radio-bridge
     restart: unless-stopped
     depends_on:
       - icecast

@@ -45,6 +45,12 @@ A "Silent Bridge" that pipes raw audio data from a Snapcast client directly into
    - `ICECAST_URL`: The full URL to stream to the internal Icecast server.
    - `ICECAST_*_PASSWORD`: Passwords for the Icecast server.
    - `TUNNEL_TOKEN`: Your Cloudflare Zero Trust tunnel token (if exposing via Cloudflare).
+   - `NORMALIZE` (optional): Set to `true` to enable constant loudness (EBU R128 `loudnorm`) instead of the plain limiter. Default: off.
+   - `LOUDNESS_TARGET` (optional): Target loudness in LUFS. Default: `-14`.
+   - `TRUE_PEAK` (optional): Max true peak in dBTP. Default: `-1.0`.
+   - `LOUDNESS_RANGE` (optional): Target loudness range in LU. Default: `11`.
+
+   > Normalization runs in single-pass (live) mode and adds some CPU load, which may matter on a Raspberry Pi.
 
 ## Usage
 
@@ -87,10 +93,17 @@ The audio pipeline logic is contained in `start.sh`:
 
 ```bash
 #!/bin/sh
-#!/bin/sh
+# Optional EBU R128 loudness normalization (set NORMALIZE=true in .env)
+if [ "$NORMALIZE" = "true" ]; then
+  # loudnorm upsamples internally, so resample back to 44.1 kHz afterwards
+  FILTER="aresample=async=1,loudnorm=I=${LOUDNESS_TARGET:--14}:TP=${TRUE_PEAK:--1.0}:LRA=${LOUDNESS_RANGE:-11},aresample=44100"
+else
+  FILTER="aresample=async=1,alimiter=limit=0.9"
+fi
+
 snapclient -h $SNAPSERVER_IP --logsink stderr --player file --mixer none --sampleformat '44100:16:*' | \
 ffmpeg -re -f s16le -ar 44100 -ac 2 -i pipe:0 \
--af "aresample=async=1,alimiter=limit=0.9" \
+-af "$FILTER" \
 -codec:a libvorbis -q:a 5 -content_type application/ogg \
 -f ogg $ICECAST_URL
 ```

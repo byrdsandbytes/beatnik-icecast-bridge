@@ -45,13 +45,19 @@ Universally playable on any hardware or browser. It is less efficient than moder
 ```
 
 ### 2. Ogg Vorbis (Native Icecast / High Quality)
-Provides excellent, transparent audio quality and native gapless playback support on Icecast servers. (Currently used in this setup).
+Provides excellent, transparent audio quality and native gapless playback support on Icecast servers.
 ```bash
 -codec:a libvorbis -q:a 8 -content_type application/ogg -f ogg
 ```
 *(Note: `-q:a 8` sets a variable bitrate quality target of roughly 256kbps. `-q:a 5` is roughly 160-192kbps).*
 
-### 3. AAC (Modern Balance)
+### 3. Ogg FLAC (Lossless)
+Bit-perfect audio, no quality loss. Needs roughly 700-1000 kbps, so it suits a LAN better than a tunnel or mobile connection. Player support is narrower (VLC, mpv, Firefox and Chrome generally work; some players and Safari may not). `-compression_level` (0-12) only trades CPU for size, never quality. (Currently used in this setup).
+```bash
+-codec:a flac -compression_level 5 -content_type audio/ogg -f ogg
+```
+
+### 4. AAC (Modern Balance)
 Excellent audio quality even at lower bitrates, and natively supported by almost all modern web and mobile browsers.
 ```bash
 -codec:a aac -b:a 192k -content_type audio/aac -f adts
